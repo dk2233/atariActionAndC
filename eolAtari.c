@@ -59,8 +59,6 @@ int main(int argc, char** argv)
         printf("%s\n",newFileName);
     }
 
-
-
     file2 = fopen(newFileName,"w");
     free(newFileName);
 
@@ -79,13 +77,16 @@ int main(int argc, char** argv)
         printf("%c %c \n",*(line+strlen(line)-1),*(line+strlen(line)-2));
         line=fgets(line,N,file);*/
 
+            printf("%c %0X\n",c,(unsigned char)c);
         if (c==0x0a)
                 c=EOL_ATARI;
-
-        //printf("%c",c);
-
+        else if ((unsigned char)c==EOL_ATARI)
+        {
+            printf("found %c %0X\n",c,(char)c);
+            c = 0x0a;
+        }
         buffer[n++]=(char)c;
-        printf("%c",buffer[n-1]);
+        //printf("%c",buffer[n-1]);
 
         c=fgetc(file);
 
