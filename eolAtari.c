@@ -7,9 +7,9 @@
 #define ADDITIONAL_CHARS   3
 
 long int FileSize(FILE* file);
+void createResultFileAuto(char * dotLocation, char * originalName,char *newFileName );
 
 char *strAtari="_atr";
-
 char ending[]={0xa,0xd,0};
 
 long int FileSize(FILE* file)
@@ -26,6 +26,23 @@ long int FileSize(FILE* file)
 
 }
 
+void createResultFileAuto(char * dotLocation,char * originalName, char *newFileName )
+{
+    if (dotLocation == NULL)
+    {
+        newFileName = strcpy(newFileName, originalName);
+        strcat(newFileName,strAtari);
+    }
+    else
+    {
+        int i= dotLocation-originalName;
+        strncpy(newFileName, originalName,i);
+        strcat(newFileName,strAtari);
+        strcat(newFileName,dotLocation);
+        printf("%s\n",newFileName);
+    }
+}
+
 int main(int argc, char** argv)
 {
     FILE* file;
@@ -38,26 +55,22 @@ int main(int argc, char** argv)
 
     printf("%s \n", argv[1]);
     file = fopen(argv[1],"r");
-    
 
     char *newFileName = calloc(strlen(argv[1])+strlen(strAtari),sizeof(char));
-    
     char *dotLocation = strchr(argv[1],'.');
 /* if no .act on the end */
 
-    if (dotLocation == NULL)
+    if (argc==3)
     {
-        newFileName = strcpy(newFileName, argv[1]);
-        strcat(newFileName,strAtari);
+       strcpy(newFileName, argv[2]);
     }
     else
     {
-        int i= dotLocation-argv[1];
-        strncpy(newFileName, argv[1],i);
-        strcat(newFileName,strAtari);
-        strcat(newFileName,dotLocation);
-        printf("%s\n",newFileName);
+        createResultFileAuto(dotLocation, argv[1], newFileName);
+
     }
+
+    printf("name of resault file %s \n", newFileName);
 
     file2 = fopen(newFileName,"w");
     free(newFileName);
@@ -68,7 +81,6 @@ int main(int argc, char** argv)
 
 
     char c;
-    //line=fgets(line,N,file);
     c=fgetc(file);
     long int n=0;
     while(c!=EOF)
@@ -77,12 +89,11 @@ int main(int argc, char** argv)
         printf("%c %c \n",*(line+strlen(line)-1),*(line+strlen(line)-2));
         line=fgets(line,N,file);*/
 
-            printf("%c %0X\n",c,(unsigned char)c);
         if (c==0x0a)
                 c=EOL_ATARI;
         else if ((unsigned char)c==EOL_ATARI)
         {
-            printf("found %c %0X\n",c,(char)c);
+            //printf("found %c %0X\n",c,(char)c);
             c = 0x0a;
         }
         buffer[n++]=(char)c;
